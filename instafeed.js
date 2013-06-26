@@ -122,6 +122,7 @@
               model: image,
               id: image.id,
               link: image.link,
+			  created_time: this._timeDifference(image.created_time),
               image: image.images[this.options.resolution].url,
               caption: this._getObjectProperty(image, 'caption.text'),
               likes: image.likes.count,
@@ -129,6 +130,7 @@
               location: this._getObjectProperty(image, 'location.name')
             });
             htmlString += imageString;
+
           }
           document.getElementById(this.options.target).innerHTML = htmlString;
         } else {
@@ -258,6 +260,59 @@
       data.sort(sorter.bind(this));
       return data;
     };
+
+	Instafeed.prototype._timeDifference = function(timestamp) {
+				
+		var current = new Date();
+		var previous = new Date(timestamp*1000);
+				
+	    var msPerMinute = 60 * 1000;
+	    var msPerHour = msPerMinute * 60;
+	    var msPerDay = msPerHour * 24;
+	    var msPerMonth = msPerDay * 30;
+	    var msPerYear = msPerDay * 365;
+		var plural = '';
+
+	    var elapsed = current - previous;
+
+	    if (elapsed < msPerMinute) {
+			var t = Math.round(elapsed/1000);
+			if(t>1) plural = 's'; 
+	        return t + ' second'+plural+' ago';
+	    }
+
+	    else if (elapsed < msPerHour) {
+			var t = Math.round(elapsed/msPerMinute);
+			if(t>1) plural = 's'; 
+	        return t + ' minute'+plural+' ago';   
+	    }
+
+	    else if (elapsed < msPerDay ) {
+			var t = Math.round(elapsed/msPerHour);
+			if(t>1) plural = 's'; 
+	        return t + ' hour'+plural+' ago'; 
+	    }
+
+	    else if (elapsed < msPerMonth) {
+			var t = Math.round(elapsed/msPerDay);
+			if(t>1) plural = 's'; 
+	        return t + ' day'+plural+' ago'; 
+	    }
+
+	    else if (elapsed < msPerYear) {
+			var t = Math.round(elapsed/msPerMonth);
+			if(t>1) plural = 's'; 
+	        return t + ' month'+plural+' ago';   
+	    }
+
+	    else {
+			var t = Math.round(elapsed/msPerYear);
+			if(t>1) plural = 's'; 
+	        return t + ' year'+plural+' ago';
+	    }
+	}
+
+
 
     return Instafeed;
 
